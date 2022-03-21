@@ -1,3 +1,4 @@
+package scanner;
 
 /**
  * ScanErrorException is a sub class of Exception and is thrown to indicate a 
@@ -19,7 +20,7 @@ public class ScanErrorException extends Exception
     }
     /**
      * Constructor for ScanErrorObjects that includes a reason for the error
-     * @param reason
+     * @param reason 
      */
     public ScanErrorException(String reason)
     {

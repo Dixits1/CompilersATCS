@@ -1,13 +1,25 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
-public class Main {
-    public static void main(String[] args) throws Exception {
-        FileInputStream inStream = new FileInputStream(new File("ScannerTest.txt"));
+import scanner.Scanner;
+
+public class Main 
+{
+    public static final String INPUT_DIR = "testFiles/";
+
+    public static void main(String[] args) throws Exception 
+    {
+        String fName = "ScannerTest.txt";
+        // String fName = "scannerTestAdvanced.txt";
+
+        InputStream inStream = new FileInputStream(new File(INPUT_DIR + fName));
         Scanner scanner = new Scanner(inStream);
-
-        while(scanner.hasNext()) {
-            System.out.println(scanner.nextToken());
+        String next = "";
+        while(!"END".equals(next)) 
+        {
+            next = scanner.nextToken();
+            System.out.println(next);
         }
     }
 }
