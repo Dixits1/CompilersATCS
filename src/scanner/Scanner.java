@@ -1,6 +1,8 @@
 package scanner;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Scanner is a simple scanner for Compilers and Interpreters (2014-2015) lab exercise 1. 
@@ -15,9 +17,18 @@ import java.io.*;
  */
 public class Scanner
 {
+    private static final String[] VALID_OPERANDS = new String[]{
+        ":=", 
+        "<>", ">=", "<=", "==", "<", ">",
+        "+", "-", "*", "/", "%", 
+        "(", ")"
+    };
+
     private BufferedReader in;
     private char currentChar;
     private boolean eof;
+    private List<String> validSingles;
+    private List<String> validDoubleInits;
 
     /**
      * Scanner constructor for construction of a scanner that 
@@ -32,6 +43,7 @@ public class Scanner
         in = new BufferedReader(new InputStreamReader(inStream));
         eof = false;
         getNextChar();
+        initOperandHelpers();
     }
     
     /**
@@ -46,6 +58,7 @@ public class Scanner
         in = new BufferedReader(new StringReader(inString));
         eof = false;
         getNextChar();
+        initOperandHelpers();
     }
 
     /**
@@ -91,20 +104,37 @@ public class Scanner
                     {
                         getNextChar();
                     }
+                    token = null;
                 }
-                token = null;
+                else 
+                {
+                    return "/";
+                }
             }
-
             else if(currentChar == '.') 
             {
                 token = eofToken;
                 eof = true;
+            }
+            else if(currentChar == ';') 
+            {
+                while(currentChar != '\n') 
+                {
+                    getNextChar();
+                }
+                token = ";";
+            }
+            else if(currentChar == ',')
+            {
+                eat(currentChar);
+                token = ",";
             }
             else 
             {
                 token = scanOperand();
             }
         }
+
         return token;
     }
 
@@ -242,27 +272,29 @@ public class Scanner
     }
 
     /**
-     * Scans the input for an operand using the following regular expression string: 
-     * [‘=’ ‘+’ ‘-‘ ‘*’ ‘/’ ‘%’ ‘(‘ ‘)’]
-     * Can also contain the following operands: :=, <>, >=, <=
+     * Scans the input for one of the following operands:
+     *  ":=", 
+     *  "<>", ">=", "<=", "==", 
+     *  "+", "-", "*", "/", "%", 
+     *  "(", ")"
      * @return the scanned operand
      * @throws ScanErrorException if the currentChar does not match the regex or if an error 
      * occurs while scanning the input
      */
     private String scanOperand() throws ScanErrorException 
     {
-        String[] valid2CharOperands = new String[]{":=", "<>", ">=", "<="};
-        String curToken = "" + currentChar;
+        String curToken = String.valueOf(currentChar);
 
-        if ("=+-*/%()".contains(String.valueOf(currentChar))) 
+        if (validSingles.contains(String.valueOf(currentChar))) 
         {
             eat(currentChar);
+            return curToken;
         }
-        else if(":<>".contains(String.valueOf(currentChar))) 
+        else if(validDoubleInits.contains(String.valueOf(currentChar))) 
         {
             eat(currentChar);
             curToken += currentChar;
-            for (String op : valid2CharOperands) 
+            for (String op : VALID_OPERANDS) 
             {
                 if(op.equals(curToken)) 
                 {
@@ -277,5 +309,29 @@ public class Scanner
         }
 
         return curToken;
+    }
+
+    /**
+     * Initializes the validSingles and validDoubleInits used to scan operands
+     * in the scanOperands method
+     */
+    private void initOperandHelpers() 
+    {
+        validSingles = new ArrayList<String>();
+        validDoubleInits = new ArrayList<String>();
+        for(String operand : VALID_OPERANDS)
+        {
+            if(operand.length() == 1) 
+            {
+                validSingles.add(operand);
+            }
+            if(operand.length() == 2)
+            {
+                if(!validDoubleInits.contains(String.valueOf(operand.charAt(1))))
+                {
+                    validDoubleInits.add(String.valueOf(operand.charAt(0)));
+                }
+            }
+        }
     }
 }
