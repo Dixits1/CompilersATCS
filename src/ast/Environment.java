@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Environment 
 {
-    public Map<String, Integer> variables;
+    private Map<String, Integer> variables;
     private Map<String, ProcedureDeclaration> procedures;
     private Environment parent;
 
@@ -51,6 +51,14 @@ public class Environment
     }
 
     /**
+     * @return returns the map of variables in the current environment
+     */
+    public Map<String, Integer> getVariables() 
+    {
+        return variables;
+    }
+
+    /**
      * Sets the value of the variable of the specified name to the specified value in the parent
      * environment if the variable is not already declared in the current environment and the
      * parent environment contains the variable; otherwise, declares the variable in the current
@@ -60,14 +68,17 @@ public class Environment
      */
     public void setVariable(String variable, int value)
     {
-        if(variables.get(variable) == null &&
-                parent != null && parent.variables.get(variable) != null) 
+        if(variables.get(variable) == null && parent != null) 
         {
-            parent.variables.put(variable, value);
+            if(parent.getVariables().get(variable) == null)
+                throw new RuntimeException("Variable " + variable + " not declared.");
+            parent.getVariables().put(variable, value);
         }
         else 
         {
-            declareVariable(variable, value);
+            if(variables.get(variable) == null)
+                throw new RuntimeException("Variable " + variable + " not declared.");
+            variables.put(variable, value);
         }
     }
 

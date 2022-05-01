@@ -1,5 +1,6 @@
 package ast;
 
+import emitter.Emitter;
 /**
  * Assignment specifies a statement representing an assignment of a value to a variable.
  * Contains method exec, which executes the assignment statement.
@@ -32,5 +33,16 @@ public class Assignment extends Statement
     public void exec(Environment env) throws Exception 
     {
         env.setVariable(var, exp.eval(env));
+    }
+
+    /**
+     * Compiles the assignment into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e)
+    {
+        exp.compile(e);
+        e.emit("la $t0, " + var);
+        e.emit("sw $v0, ($t0)");
     }
 }

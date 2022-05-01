@@ -2,6 +2,8 @@ package ast;
 
 import java.util.List;
 
+import emitter.Emitter;
+
 /**
  * A class to represent a procedure call, with a procedure name and a list of arguments.
  * Contains method exec which executes the procedure call.
@@ -55,5 +57,14 @@ public class ProcedureCall extends Expression
         }
 
         return env.getVariable(name);
+    }
+
+    /**
+     * Compiles the procedure call into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e)
+    {
+        throw new RuntimeException("Implement.");
     }
 }

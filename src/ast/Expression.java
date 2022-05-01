@@ -1,5 +1,7 @@
 package ast;
 
+import emitter.Emitter;
+
 /**
  * Abstract class representing an expression in the AST.
  * @author Arjun Dixit
@@ -14,4 +16,11 @@ public abstract class Expression
      * @throws Exception if the expression is invalid
      */
     public abstract int eval(Environment env) throws Exception;
+
+
+    /**
+     * Compiles the class into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public abstract void compile(Emitter e);
 }

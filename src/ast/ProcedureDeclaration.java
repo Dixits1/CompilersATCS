@@ -2,6 +2,8 @@ package ast;
 
 import java.util.List;
 
+import emitter.Emitter;
+
 /**
  * Class representing a procedure declaration in the AST.
  * 
@@ -52,5 +54,15 @@ public class ProcedureDeclaration extends Statement
     public Statement getStatement() 
     {
         return stmt;
+    }
+
+        /**
+     * Compiles the procedure declaration into assembly code and emits the assembly code to 
+     * an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e)
+    {
+        throw new RuntimeException("Implement.");
     }
 }

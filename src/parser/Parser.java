@@ -74,7 +74,22 @@ public class Parser
     public Program parseProgram() throws ScanErrorException
     {
         List<ProcedureDeclaration> procedures = new ArrayList<ProcedureDeclaration>();
+        List<String> variables = new ArrayList<String>();
         
+        while(currentToken.equals("VAR"))
+        {
+            eat("VAR");
+            variables.add(Variable.NAME_PREFIX + currentToken);
+            eat(currentToken);
+            while(currentToken.equals(","))
+            {
+                eat(",");
+                variables.add(Variable.NAME_PREFIX + currentToken);
+                eat(currentToken);
+            }
+            eat(";");
+        }
+
         while(currentToken.equals("PROCEDURE"))
         {
             eat("PROCEDURE");
@@ -84,7 +99,7 @@ public class Parser
             List<String> args = new ArrayList<String>();
             while(!currentToken.equals(")"))
             {
-                args.add(currentToken);
+                args.add(Variable.NAME_PREFIX + currentToken);
                 eat(currentToken);
                 if(!currentToken.equals(")"))
                 {
@@ -96,7 +111,7 @@ public class Parser
             procedures.add(new ProcedureDeclaration(name, args, parseStatement()));
         }
 
-        return new Program(procedures, parseStatement());
+        return new Program(variables, procedures, parseStatement());
     }
 
     /**
@@ -159,7 +174,7 @@ public class Parser
         }
         else
         {
-            String varName = currentToken;
+            String varName = Variable.NAME_PREFIX + currentToken;
             eat(currentToken);
             eat(":=");
             Expression exp = parseExpr();
@@ -232,7 +247,7 @@ public class Parser
             } 
             else
             {
-                num = new Variable(id);
+                num = new Variable(Variable.NAME_PREFIX + id);
             }
         }
 

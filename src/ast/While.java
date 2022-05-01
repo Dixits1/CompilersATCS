@@ -1,5 +1,7 @@
 package ast;
 
+import emitter.Emitter;
+
 /**
  * Class representing a while loop in the AST.
  * Contains method exec which executes the loop.
@@ -34,5 +36,24 @@ public class While extends Statement
         {
             statement.exec(env);
         }
+    }
+
+    /**
+     * Compiles the while loop into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e)
+    {
+        int labelID = e.nextLabelID();
+        String whileLoop = "whileLoop" + labelID;
+        String endWhileLoop = "endWhileLoop" + labelID;
+
+        e.emit("j " + whileLoop);
+
+        e.emit(whileLoop + ":");
+        condition.compile(e, endWhileLoop);
+        statement.compile(e);
+        e.emit("j " + whileLoop);
+        e.emit(endWhileLoop + ":");
     }
 }

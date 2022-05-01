@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import ast.Environment;
 import ast.Program;
+import emitter.Emitter;
 import parser.Parser;
 import scanner.Scanner;
 
@@ -14,6 +15,9 @@ import scanner.Scanner;
  */
 public class Main 
 {
+    /**
+     * Directory for testing files 
+     */
     public static final String INPUT_DIR = "testFiles/";
 
     /**
@@ -23,14 +27,19 @@ public class Main
      */
     public static void main(String[] args) throws Exception 
     {
-        String fName = "test.txt";
+        String inputName = "parserTest9.txt";
+        String outputName = "out.asm";
 
-        InputStream inStream = new FileInputStream(new File(INPUT_DIR + fName));
+        InputStream inStream = new FileInputStream(new File(INPUT_DIR + inputName));
         Scanner scanner = new Scanner(inStream);
         Parser parser = new Parser(scanner);
-        Environment env = new Environment();
         Program program = parser.parseProgram();
 
-        program.exec(env);
+        // execute program in Java
+        program.exec(new Environment());
+
+        // emit compiled assembly code
+        Emitter e = new Emitter(outputName);
+        program.compile(e);
     }
 }

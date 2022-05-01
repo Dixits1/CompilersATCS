@@ -1,5 +1,6 @@
 package ast;
 
+import emitter.Emitter;
 
 /**
  * A class to represent an if statement, with a condition, statement for if the condition is true,
@@ -62,4 +63,40 @@ public class If extends Statement
         }
     }
 
+    /**
+     * Compiles the if statement into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e)
+    {
+        String ifID =String.valueOf(e.nextLabelID());
+        String ifLabel = "ifthen" + ifID; 
+        String elseLabel = "ifelse" + ifID;
+        String afterLabel = "ifafter" + ifID;
+
+        if(elseStatement == null)
+        {
+            condition.compile(e, afterLabel);
+            e.emit("j " + ifLabel);
+
+            e.emit(ifLabel + ":");
+            ifStatement.compile(e);
+            e.emit("j " + afterLabel);
+        }
+        else
+        {
+            condition.compile(e, elseLabel);
+            e.emit("j " + ifLabel);
+
+            e.emit(ifLabel + ":");
+            ifStatement.compile(e);
+            e.emit("j " + afterLabel);
+
+            e.emit(elseLabel + ":");
+            elseStatement.compile(e);
+            e.emit("j " + afterLabel);
+        }
+
+        e.emit(afterLabel + ":");
+    }
 }

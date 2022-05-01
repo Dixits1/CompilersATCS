@@ -1,5 +1,7 @@
 package ast;
 
+import emitter.Emitter;
+
 /**
  * Class that reperesents a binary operation within an expression. Stores the expression
  * on the left side of the operator and the expression on the right side of the operator,
@@ -50,4 +52,30 @@ public class BinOp extends Expression
             throw new Exception("Unknown operator: " + op);
     }
     
+    /**
+     * Compiles the BinOp into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e) 
+    {
+        exp1.compile(e);
+        e.emitPush("$v0");
+        exp2.compile(e);
+        e.emitPop("$t0");
+        
+        if(op.equals("+"))
+            e.emit("addu $v0, $t0, $v0");
+        else if(op.equals("-"))
+            e.emit("subu $v0, $t0, $v0");
+        else if(op.equals("*"))
+        {
+            e.emit("mult $t0, $v0");
+            e.emit("mflo $v0");
+        }
+        else if(op.equals("/"))
+        {
+            e.emit("div $t0, $v0");
+            e.emit("mflo $v0");
+        }
+    }
 }

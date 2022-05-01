@@ -1,5 +1,7 @@
 package ast;
 
+import emitter.Emitter;
+
 /**
  * Class representing a statement to be executed in the AST.
  * @author Arjun Dixit
@@ -13,4 +15,10 @@ public abstract class Statement
      * @throws Exception if an error occurs during the statement execution
      */
     public abstract void exec(Environment env) throws Exception;
+
+    /**
+     * Compiles the Statement into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public abstract void compile(Emitter e);
 }

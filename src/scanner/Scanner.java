@@ -19,7 +19,7 @@ public class Scanner
 {
     private static final String[] VALID_OPERANDS = new String[]{
         ":=", 
-        "<>", ">=", "<=", "==", "<", ">",
+        "<>", ">=", "<=", "=", "<", ">",
         "+", "-", "*", "/", "%", 
         "(", ")"
     };
@@ -134,6 +134,8 @@ public class Scanner
                 token = scanOperand();
             }
         }
+
+        // System.out.println(token);
 
         return token;
     }
@@ -274,7 +276,7 @@ public class Scanner
     /**
      * Scans the input for one of the following operands:
      *  ":=", 
-     *  "<>", ">=", "<=", "==", 
+     *  "<>", ">=", "<=", "=", 
      *  "+", "-", "*", "/", "%", 
      *  "(", ")"
      * @return the scanned operand
@@ -284,13 +286,9 @@ public class Scanner
     private String scanOperand() throws ScanErrorException 
     {
         String curToken = String.valueOf(currentChar);
+        String initToken = curToken;
 
-        if (validSingles.contains(String.valueOf(currentChar))) 
-        {
-            eat(currentChar);
-            return curToken;
-        }
-        else if(validDoubleInits.contains(String.valueOf(currentChar))) 
+        if(validDoubleInits.contains(String.valueOf(currentChar))) 
         {
             eat(currentChar);
             curToken += currentChar;
@@ -303,12 +301,23 @@ public class Scanner
                 }
             }
         }
+        
+        if(validSingles.contains(initToken)) 
+        {
+            if(validDoubleInits.contains(String.valueOf(initToken))) 
+            {
+                return initToken;
+            }
+            else
+            {
+                eat(currentChar);
+                return curToken;
+            }
+        }
         else 
         {
             throw new ScanErrorException("No lexeme recognized.");
         }
-
-        return curToken;
     }
 
     /**

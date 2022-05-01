@@ -1,5 +1,7 @@
 package ast;
 
+import emitter.Emitter;
+
 /**
  * Class representing a number in the AST.
  * Contains method eval which returns the value of the number.
@@ -27,5 +29,14 @@ public class Number extends Expression
     public int eval(Environment env) 
     {
         return value;
+    }
+
+    /**
+     * Compiles the number into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     */
+    public void compile(Emitter e)
+    {
+        e.emit("li $v0, " + value);
     }
 }

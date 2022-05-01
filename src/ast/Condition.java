@@ -1,5 +1,7 @@
 package ast;
 
+import emitter.Emitter;
+
 /**
  * Class that represents a condition / boolean expression, with a relational 
  * operator and two expressions on each side of the operator.
@@ -38,7 +40,7 @@ public class Condition
         int val1 = exp1.eval(env);
         int val2 = exp2.eval(env);
 
-        if (relop.equals("=="))
+        if (relop.equals("="))
             return val1 == val2;
         else if (relop.equals("<>"))
             return val1 != val2;
@@ -52,6 +54,37 @@ public class Condition
             return val1 <= val2;
         else
             throw new RuntimeException("Unknown operator: " + relop + ".");
+    }
+
+
+    /**
+     * Compiles the condition into assembly code and emits the assembly code to an output file.
+     * @param e the emitter which emits the assembly code to the output file
+     * @param label specifies the label to branch to if the condition is true
+     */
+    public void compile(Emitter e, String label)
+    {
+        String asOp = "";
+
+        exp1.compile(e);
+        e.emitPush("$v0");
+        exp2.compile(e);
+        e.emitPop("$t0");
+        
+        if (relop.equals("="))
+            asOp = "bne";
+        else if (relop.equals("<>"))
+            asOp = "beq";
+        else if (relop.equals(">"))
+            asOp = "ble";
+        else if (relop.equals("<"))
+            asOp = "bge";
+        else if (relop.equals(">="))
+            asOp =  "blt";
+        else if (relop.equals("<="))
+            asOp = "bgt";
+
+        e.emit(asOp + " $t0, $v0, " + label);
     }
 
 }

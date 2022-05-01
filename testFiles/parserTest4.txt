@@ -1,3 +1,5 @@
+VAR x, y;
+
 BEGIN
     x := 2;
     y := x + 1;
