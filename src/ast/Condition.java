@@ -66,6 +66,8 @@ public class Condition
     {
         String asOp = "";
 
+        e.emit("# evaluate condition and branch to label " + label);
+
         exp1.compile(e);
         e.emitPush("$v0");
         exp2.compile(e);

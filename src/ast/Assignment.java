@@ -41,6 +41,7 @@ public class Assignment extends Statement
      */
     public void compile(Emitter e)
     {
+        e.emit("# evaluate expression and store in the variable " + var);
         exp.compile(e);
         e.emit("la $t0, " + var);
         e.emit("sw $v0, ($t0)");

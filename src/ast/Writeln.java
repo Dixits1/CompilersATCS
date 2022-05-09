@@ -40,6 +40,7 @@ public class Writeln extends Statement
      */
     public void compile(Emitter e)
     {
+        e.emit("# evaluate expression and print the value of the expression");
         exp.compile(e);
         e.emit("move $a0, $v0");
         e.emit("li $v0, 1");

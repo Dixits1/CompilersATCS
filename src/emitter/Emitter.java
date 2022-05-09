@@ -55,7 +55,7 @@ public class Emitter
      */
     public void emitPush(String reg)
     {
-        emit("subu $sp, $sp, 4");
+        emit("subu $sp, $sp, 4 /t # push " + reg);
         emit("sw " + reg + ", ($sp)");
     }
 
@@ -65,7 +65,7 @@ public class Emitter
      */
     public void emitPop(String reg) 
     {
-        emit("lw " + reg + ", ($sp)");
+        emit("lw " + reg + ", ($sp) /t # pop " + reg);
         emit("addu $sp, $sp, 4");
     }
 

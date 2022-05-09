@@ -74,6 +74,8 @@ public class If extends Statement
         String elseLabel = "ifelse" + ifID;
         String afterLabel = "ifafter" + ifID;
 
+        e.emit("# evaluate condition(s) and create label(s) for if (and else statements)");
+
         if(elseStatement == null)
         {
             condition.compile(e, afterLabel);

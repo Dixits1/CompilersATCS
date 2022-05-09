@@ -58,6 +58,8 @@ public class BinOp extends Expression
      */
     public void compile(Emitter e) 
     {
+        e.emit("# evaluate binary operation and store result in $v0");
+
         exp1.compile(e);
         e.emitPush("$v0");
         exp2.compile(e);

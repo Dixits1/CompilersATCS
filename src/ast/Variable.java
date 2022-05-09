@@ -42,6 +42,7 @@ public class Variable extends Expression
      */
     public void compile(Emitter e)
     {
+        e.emit("# load the value of " + name + " from memory and store in $v0");
         e.emit("la $t0, " + name);
         e.emit("lw $v0, ($t0)");
     }

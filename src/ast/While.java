@@ -48,12 +48,18 @@ public class While extends Statement
         String whileLoop = "whileLoop" + labelID;
         String endWhileLoop = "endWhileLoop" + labelID;
 
+        e.emit("# jump to while loop");
+
         e.emit("j " + whileLoop);
 
         e.emit(whileLoop + ":");
+
+        e.emit("# evluate condition for while loop and jump to end while loop if false");
         condition.compile(e, endWhileLoop);
+        e.emit("# contents of while loop");
         statement.compile(e);
         e.emit("j " + whileLoop);
+        e.emit("# after while loop");
         e.emit(endWhileLoop + ":");
     }
 }
